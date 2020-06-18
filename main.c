@@ -23,7 +23,7 @@ volatile unsigned int analogResult = 0;
 
 int main(void)
 {
-DDRA |= (1<<led_green)|(1<<led_yellow)|(1<<led_red);   //Set the Data Direction Register to output (PA3 = yellow led , PA6 = green led, PA0= red led)
+DDRA |= (1<<led_green)|(1<<led_yellow)|(1<<led_red);   //Set the Data Direction Register to output (PA3 = yellow led , PA6 = green led, PA4= red led)
 DDRA &= ~((1<<pot)|(1<<int_btn1));	//Set the Data Direction Register for the POT to input
 
 DDRB |= (1<<led_blue); //set as output
