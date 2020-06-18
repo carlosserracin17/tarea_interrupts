@@ -10,9 +10,9 @@
 #include <avr/interrupt.h>
 #include <util/delay.h>
 
-#define int_btn PORTB6
+//#define int_btn PORTB6 //se inabilito el interruptor del puerto B6
 #define int_btn1 PORTA2
-#define led_blue PORTB0
+//#define led_blue PORTB0 // se inabilito el led azul del puerto B0
 #define led_green PORTA3
 #define led_yellow PORTA5
 #define led_red PORTA4
@@ -26,8 +26,8 @@ int main(void)
 DDRA |= (1<<led_green)|(1<<led_yellow)|(1<<led_red);   //Set the Data Direction Register to output (PA3 = yellow led , PA6 = green led, PA4= red led)
 DDRA &= ~((1<<pot)|(1<<int_btn1));	//Set the Data Direction Register for the POT to input
 
-DDRB |= (1<<led_blue); //set as output
-DDRB &= ~(1<<int_btn); //set as input and enable pull-up resistor on btn
+//DDRB |= (1<<led_blue); //set as output
+//DDRB &= ~(1<<int_btn); //set as input and enable pull-up resistor on btn
 
 ADMUX =
 (0 << REFS1) |  (0 << REFS0) |   // Sets ref. voltage to VCC
@@ -48,9 +48,7 @@ ADCSRB =
 (0<<ADTS1)|		//Free running mode bit 1
 (0<<ADTS0);		//Free running mode bit 0
 
-GIMSK = 
-(1<<INT0)| //habilita la interrupcion externa INT0
-(1<<INT1);  //habilita la interrupcion externa INT1
+GIMSK = (1<<INT1);  //habilita la interrupcion externa INT1 (solo se puede habilitar 1 a la vez INT0 o INT1)
 
 MCUCR = (0<<ISC01) | (1<<ISC00); //cualquier cambio logico en INT0 o INT1 genera una solicitud de interrupcion
 
@@ -58,7 +56,7 @@ MCUCR = (0<<ISC01) | (1<<ISC00); //cualquier cambio logico en INT0 o INT1 genera
 sei();
 
 while (1)
-{
+ {
 	if(analogResult<=200)
 	{
 		PORTA|=(1<<led_yellow);
@@ -75,7 +73,7 @@ while (1)
 	{
 		PORTA &=~((1<<led_green)|(1<<led_yellow));
 	}
-}
+ }
 }
 
 
@@ -88,6 +86,7 @@ ISR(ADC_vect) //interrupt function
 	analogResult = binary_weighted_voltage_low | binary_weighted_voltage_high;
 }
 
+/*
 ISR(INT0_vect)
 {
 	if((PINB & (1<<int_btn))== 0){
@@ -97,6 +96,7 @@ ISR(INT0_vect)
 		PORTB &= ~(1<<led_blue); //when btn is released, we got a logical change again, int get in again and reset led to off
 	}
 }
+*/
 
 ISR(INT1_vect)
 {
